@@ -5,11 +5,11 @@ import { useNavigate, useParams } from 'react-router-dom';
 export default function CreatePost() {
   const { id } = useParams();
   const isEdit = Boolean(id);
-  const [title, setTitle]       = useState('');
-  const [content, setContent]   = useState('');
+  const [title, setTitle] = useState('');
+  const [content, setContent] = useState('');
   const [category, setCategory] = useState('');
-  const [status, setStatus]     = useState('draft');
-  const [image, setImage]       = useState(null);
+  const [status, setStatus] = useState('draft');
+  const [image, setImage] = useState(null);
   const navigate = useNavigate();
 
   // Predefined categories
@@ -24,26 +24,26 @@ export default function CreatePost() {
   useEffect(() => {
     if (isEdit) {
       const token = localStorage.getItem('token');
-      axios.get(`http://localhost:5001/api/____fill in___`, {
+      axios.get(`http://localhost:5001/api/posts`, { 
         headers: { Authorization: `Bearer ${token}` }
       })
-      .then(res => {
-        const post = res.data.find(p => p._id === id);
-        if (post) {
-          setTitle(post.title);
-          setContent(post.content);
-          setCategory(post.category);
-          setStatus(post.status);
-        }
-      })
-      .catch(console.error);
+        .then(res => {
+          const post = res.data.find(p => p._id === id);
+          if (post) {
+            setTitle(post.title);
+            setContent(post.content);
+            setCategory(post.category);
+            setStatus(post.status);
+          }
+        })
+        .catch(console.error);
     }
   }, [isEdit, id]);
 
   const handleSubmit = async e => {
     e.preventDefault();
     const token = localStorage.getItem('token');
-    //const formData = new FormData();
+    const formData = new FormData();
     formData.append('title', title);
     formData.append('content', content);
     formData.append('category', category);
@@ -51,7 +51,7 @@ export default function CreatePost() {
     if (image) formData.append('image', image);
 
     try {
-      const url    = isEdit
+      const url = isEdit
         ? `http://localhost:5001/api/posts/${id}`
         : 'http://localhost:5001/api/posts';
       const method = isEdit ? 'put' : 'post';

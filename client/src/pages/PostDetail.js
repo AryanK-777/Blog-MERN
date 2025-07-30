@@ -22,19 +22,19 @@ export default function PostDetail() {
 
   return (
     <div className="card mb-4 shadow-sm">
-      {post.imagePath && 
-
-}`}
-          className="card-img-top"
-          alt={post.title}
-        />
-      )}
-      <div className="card-body">
-        <h2 className="card-title">{post.title}</h2>
-        <p className="text-muted mb-2">Category: {post.category}</p>
-        <p className="card-text">{post.content}</p>
-        <Link to="/" className="btn btn-secondary">Back to Posts</Link>
-      </div>
-    </div>
+  {post.imagePath && ( 
+    <img
+      src={post.imagePath} 
+      className="card-img-top"
+      alt={post.title}
+    />
+  )}
+  <div className="card-body">
+    <h2 className="card-title">{post.title}</h2>
+    <p className="text-muted mb-2">Category: {post.category}</p>
+    <p className="card-text">{post.content}</p>
+    <Link to="/" className="btn btn-secondary">Back to Posts</Link>
+  </div>
+</div>
   );
 }
