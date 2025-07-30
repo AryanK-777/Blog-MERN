@@ -1,3 +1,4 @@
+//blog-mern\server\routes\posts.js
 const router = require('express').Router();
 const Post   = require('../models/Post');
 const jwt    = require('jsonwebtoken');
@@ -17,13 +18,17 @@ const getUserId = header => {
 // • if logged in → only that user’s posts (drafts + published)
 // • if not → only published posts
 router.get('/', async (req, res) => {
-  const userId = getUserId(req.headers.authorization);
-  const filter = userId
-    ? { author: userId }
-    : { status: 'published' };      // only published for public
-  const posts = await Post.find(filter)
-    .populate('author', 'name email');
-  res.json(posts);
+    try {
+        const userId = getUserId(req.headers.authorization);
+        const filter = userId
+            ? { author: userId }
+            : { status: 'published' };
+        const posts = await Post.find(filter)
+            .populate('author', 'name email');
+        res.json(posts);
+    } catch (err) {
+        res.status(500).json({ error: err.message });
+    }
 });
 
 // Auth middleware
@@ -71,7 +76,12 @@ router.delete('/:id', requireAuth, async (req, res) => {
   if (!post) return res.status(404).json({ error: 'Not found' });
   if (post.author.toString() !== req.userId)
     return res.status(403).json({ error: 'Forbidden' });
-
+   if (post.imagePath) {
+        const imageFullPath = path.join(__dirname, '../uploads', post.imagePath);
+        fs.unlink(imageFullPath, (err) => {
+            if (err) console.error("Error deleting image file:", err);
+        });
+    }
   await post.deleteOne();
   res.json({ message: 'Deleted' });
 });

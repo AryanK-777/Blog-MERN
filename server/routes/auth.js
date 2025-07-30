@@ -1,7 +1,8 @@
+// blog-mern\server\routes\auth.js
 const router = require('express').Router();
-const User   = require('../models/User');
+const User = require('../models/User');
 const bcrypt = require('bcryptjs');
-const jwt    = require('jsonwebtoken');
+const jwt = require('jsonwebtoken');
 
 // Signup
 router.post('/signup', async (req, res) => {
@@ -33,8 +34,13 @@ router.post('/signin', async (req, res) => {
 
     if (!bcrypt.compareSync(password, user.password))
       return res.status(401).json({ error: 'Invalid credentials' });
+    const token = jwt.sign(
+      { id: user._id },
+      process.env.JWT_SECRET,
+      { expiresIn: '1h' } 
+    );
+    res.status(200).json({ token, userId: user._id, name: user.name, email: user.email });
 
-    
   } catch (err) {
     res.status(500).json({ error: err.message });
   }
