@@ -1,3 +1,4 @@
+//client\src\App.js
 import React from 'react';
 import { BrowserRouter, Routes, Route } from 'react-router-dom';
 import Navbar     from './components/Navbar';
@@ -18,7 +19,7 @@ export default function App() {
           <Route path="/signin"   element={<Signin />} />
           <Route path="/create"   element={<CreatePost />} />
           <Route path="/edit/:id" element={<CreatePost />} />
-          <Route path="/post/:id" element={<PostDetail />} />  {/* new */}
+          <Route path="/post/:id" element={<PostDetail />} />  
         </Routes>
       </div>
     </BrowserRouter>

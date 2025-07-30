@@ -16,13 +16,17 @@ export default function Home() {
       .catch(console.error)
   }, [token])
 
-  const handleDelete = async id => {
-    if (!window.confirm('Delete this post?')) return
-    await axios.delete(`http://localhost:5001/api/posts/${id}`, {
-      headers: { Authorization: `Bearer ${token}` }
-    })
-    setPosts(p => p.filter())
-  }
+  const handleDelete = async (id) => {
+    if (!window.confirm('Delete this post?')) return;
+    try {
+      await axios.delete(`http://localhost:5001/api/posts/${id}`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setPosts(prev => prev.filter(p => p._id !== id));
+    } catch (err) {
+      console.error('Delete failed:', err);
+    }
+  };
 
   return (
     <div
